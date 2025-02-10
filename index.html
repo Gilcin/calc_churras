@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Churrasco</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: 
+                linear-gradient(
+                    rgba(0, 0, 0, 0.8),
+                    rgba(0, 0, 0, 0.8)
+                ),
+                url('img/churras.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            background: rgba(251, 251, 251, 0.13);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 107, 1, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-shadow: 0 0 10px rgba(255, 107, 1, 0.3);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .options-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(61, 61, 61, 0.3);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 107, 1, 0.18);
+            border-radius: 8px;
+            font-size: 16px;
+            color: #fff;
+            transition: all 0.3s;
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #ff8534;
+            box-shadow: 0 0 10px rgba(255, 107, 1, 0.3);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #ff6b01;
+            background: rgba(61, 61, 61, 0.3);
+            border: 1px solid rgba(255, 107, 1, 0.18);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 107, 1, 0.8);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+            box-shadow: 0 4px 16px 0 rgba(255, 107, 1, 0.3);
+        }
+
+        button:hover {
+            background: rgba(255, 133, 52, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .resultado {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(61, 61, 61, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 8px;
+            display: none;
+            border: 1px solid rgba(255, 107, 1, 0.18);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.25);
+        }
+
+        .resultado.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .resultado h2 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .resultado p {
+            margin-bottom: 10px;
+            color: #ddd;
+            font-size: 16px;
+        }
+
+        .destaque {
+            color: #ff6b01;
+            font-weight: bold;
+        }
+
+        .duracao-grupo {
+            margin-bottom: 20px;
+        }
+
+        .separador {
+            border-top: 1px solid rgba(255, 107, 1, 0.18);
+            margin: 20px 0;
+            opacity: 0.3;
+        }
+
+        @keyframes fireEffect {
+            0% { 
+                box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37),
+                            0 0 20px rgba(255, 107, 1, 0.3);
+            }
+            50% { 
+                box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37),
+                            0 0 30px rgba(255, 107, 1, 0.5);
+            }
+            100% { 
+                box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37),
+                            0 0 20px rgba(255, 107, 1, 0.3);
+            }
+        }
+
+        .container.fire-effect {
+            animation: fireEffect 1.5s infinite;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 Calculadora de Churrasco</h1>
+        
+        <div class="options-group">
+            <div class="input-group">
+                <label for="homens">Número de homens:</label>
+                <input type="number" id="homens" min="0" value="0">
+            </div>
+
+            <div class="input-group">
+                <label for="mulheres">Número de mulheres:</label>
+                <input type="number" id="mulheres" min="0" value="0">
+            </div>
+
+            <div class="input-group">
+                <label for="criancas">Número de crianças:</label>
+                <input type="number" id="criancas" min="0" value="0">
+            </div>
+
+            <div class="input-group">
+                <label for="bebem">Número de pessoas que bebem:</label>
+                <input type="number" id="bebem" min="0" value="0">
+            </div>
+        </div>
+
+        <div class="duracao-grupo">
+            <label for="duracao">Duração do churrasco:</label>
+            <select id="duracao">
+                <option value="1">Até 4 horas</option>
+                <option value="1.3">4-6 horas</option>
+                <option value="1.5">Mais de 6 horas</option>
+            </select>
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="vegetarianos">
+            <label for="vegetarianos">Incluir opções vegetarianas</label>
+        </div>
+
+        <div class="separador"></div>
+
+        <h3>Tipos de Carne</h3>
+        <div class="checkbox-group">
+            <input type="checkbox" id="bovina" checked>
+            <label for="bovina">Carne Bovina (Picanha, Maminha, Costela, etc)</label>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="linguica" checked>
+            <label for="linguica">Linguiça (Tradicional, Cuiabana, etc)</label>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="frango" checked>
+            <label for="frango">Frango (Coxa, Asa, Coração)</label>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="porco" checked>
+            <label for="porco">Carne Suína (Picanha, Costela, Panceta)</label>
+        </div>
+
+        <button onclick="calcular()">Calcular</button>
+
+        <div class="resultado" id="resultado">
+            <h2>Você vai precisar de:</h2>
+            <div id="carnes-result"></div>
+            <div id="vegetariano-result"></div>
+            <div class="separador"></div>
+            <p>🥖 Pão de alho: <span id="pao" class="destaque"></span></p>
+            <p>🧂 Sal grosso: <span id="sal" class="destaque"></span></p>
+            <p>🥬 Farofa: <span id="farofa" class="destaque"></span></p>
+            <p>🥗 Arroz: <span id="arroz" class="destaque"></span></p>
+            <div class="separador"></div>
+            <p>🍺 Cerveja: <span id="cerveja" class="destaque"></span></p>
+            <p>🥤 Refrigerante: <span id="refrigerante" class="destaque"></span></p>
+            <p>🧊 Gelo: <span id="gelo" class="destaque"></span></p>
+            <p>🔥 Carvão: <span id="carvao" class="destaque"></span></p>
+            <p>💰 Custo estimado: <span id="custo" class="destaque"></span></p>
+        </div>
+    </div>
+
+    <script>
+        function calcular() {
+            const homens = parseInt(document.getElementById('homens').value) || 0;
+            const mulheres = parseInt(document.getElementById('mulheres').value) || 0;
+            const criancas = parseInt(document.getElementById('criancas').value) || 0;
+            const pessoasBebem = parseInt(document.getElementById('bebem').value) || 0;
+            const duracao = parseFloat(document.getElementById('duracao').value);
+            const incluirVegetarianos = document.getElementById('vegetarianos').checked;
+
+            // Cálculos por pessoa
+            const carnePorHomem = 0.45 * duracao; // 450g
+            const carnePorMulher = 0.35 * duracao; // 350g
+            const carnePorCrianca = 0.2 * duracao; // 200g
+
+            const totalPessoas = homens + mulheres + criancas;
+            
+            // Resultado das carnes
+            let htmlCarnes = '';
+            let totalCarne = 0;
+
+            if (document.getElementById('bovina').checked) {
+                const bovina = ((homens * 0.3 + mulheres * 0.24 + criancas * 0.15) * duracao).toFixed(2);
+                htmlCarnes += `<p>🥩 Carne Bovina: <span class="destaque">${bovina} kg</span></p>`;
+                totalCarne += parseFloat(bovina);
+            }
+
+            if (document.getElementById('linguica').checked) {
+                const linguica = ((homens * 0.15 + mulheres * 0.12 + criancas * 0.08) * duracao).toFixed(2);
+                htmlCarnes += `<p>🌭 Linguiça: <span class="destaque">${linguica} kg</span></p>`;
+                totalCarne += parseFloat(linguica);
+            }
+
+            if (document.getElementById('frango').checked) {
+                const frango = ((homens * 0.1 + mulheres * 0.08 + criancas * 0.05) * duracao).toFixed(2); 
+                htmlCarnes += `<p>🍗 Frango: <span class="destaque">${frango} kg</span></p>`;
+                totalCarne += parseFloat(frango);
+            }
+
+            if (document.getElementById('porco').checked) {
+                const porco = ((homens * 0.15 + mulheres * 0.12 + criancas * 0.08) * duracao).toFixed(2);
+                htmlCarnes += `<p>🥓 Carne Suína: <span class="destaque">${porco} kg</span></p>`;
+                totalCarne += parseFloat(porco);
+            }
+
+            document.getElementById('carnes-result').innerHTML = htmlCarnes;
+
+            // Opções vegetarianas
+            if (incluirVegetarianos) {
+                const legumes = (totalPessoas * 0.2).toFixed(2);
+                const queijo = (totalPessoas * 0.1).toFixed(2);
+                let htmlVeg = `
+                    <div class="separador"></div>
+                    <h3>Opções Vegetarianas:</h3>
+                    <p>🥕 Legumes para grelhar: <span class="destaque">${legumes} kg</span></p>
+                    <p>🧀 Queijo coalho: <span class="destaque">${queijo} kg</span></p>
+                `;
+                document.getElementById('vegetariano-result').innerHTML = htmlVeg;
+            } else {
+                document.getElementById('vegetariano-result').innerHTML = '';
+            }
+
+            // Acompanhamentos
+            const totalPaoAlho = Math.ceil(totalPessoas * 2 * duracao);
+            const totalSal = Math.ceil(totalCarne * 0.04 * 1000); // 40g por kg de carne
+            const totalFarofa = (totalPessoas * 0.15git * duracao).toFixed(2);
+            const totalArroz = (totalPessoas * 0.2 * duracao).toFixed(2);
+            
+            // Bebidas e Carvão
+            const lataoPorPessoa = 4; // latões de 473ml por pessoa
+            const totalCerveja = Math.ceil(pessoasBebem * lataoPorPessoa * duracao); // em latões
+            const totalRefrigerante = Math.ceil((homens + mulheres - pessoasBebem) * 0.5 * duracao + criancas * 0.75 * duracao); // em litros
+            const totalGelo = Math.ceil((totalCerveja * 0.3 + totalRefrigerante * 0.3) * duracao); // em kg 
+            const totalCarvao = Math.ceil(totalPessoas * 0.7 + totalCarne * 0.8); // ~700g por pessoa + 800g por kg de carne
+
+            // Custo estimado (valores em reais)
+            const custoCarne = totalCarne * 50; // média de R$50 por kg
+            const custoBebidas = totalCerveja * 5 + totalRefrigerante * 4; // R$5 por latão, R$4 por litro de refri
+            const custoAcompanhamentos = totalPaoAlho * 2 + totalFarofa * 5 + totalArroz * 5 + totalCarvao * 5; // R$5 por kg de carvão
+            const custoTotal = custoCarne + custoBebidas + custoAcompanhamentos;
+
+            // Exibir resultados
+            document.getElementById('pao').textContent = `${totalPaoAlho} unidades`;
+            document.getElementById('sal').textContent = `${totalSal} g`;
+            document.getElementById('farofa').textContent = `${totalFarofa} kg`;
+            document.getElementById('arroz').textContent = `${totalArroz} kg`;
+            document.getElementById('cerveja').textContent = `${totalCerveja} latões (473ml)`;
+            document.getElementById('refrigerante').textContent = `${totalRefrigerante} L`;
+            document.getElementById('gelo').textContent = `${totalGelo} kg`;
+            document.getElementById('carvao').textContent = `${totalCarvao} kg`;
+            document.getElementById('custo').textContent = `R$ ${custoTotal.toFixed(2)}`;
+
+            const container = document.querySelector('.container');
+            const resultado = document.getElementById('resultado');
+            
+            // Adiciona efeito de fogo
+            container.classList.add('fire-effect');
+            
+            // Mostra resultado com animação
+            resultado.style.display = 'block';
+            setTimeout(() => {
+                resultado.classList.add('visible');
+            }, 100);
+        }
+    </script>
+</body>
+</html>
